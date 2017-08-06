@@ -6,6 +6,7 @@ import { renderToString } from "react-dom/server";
 import { StaticRouter } from "react-router";
 
 import App from "./app";
+import { store } from "./store";
 
 function handleServer(request, response) {
   const Application = App(StaticRouter);
@@ -19,7 +20,13 @@ function handleServer(request, response) {
       return;
     }
 
-    const nextHTML = html.replace("%HTML%", renderedApp);
+    const storeScript = `
+      <script>var __INITIAL_STATE__=${JSON.stringify(
+        store.getState()
+      )};</script>
+    `.trim();
+
+    const nextHTML = html.replace("%HTML%", storeScript + renderedApp);
     response.write(nextHTML);
     response.end();
   });
