@@ -1,14 +1,18 @@
-import React from 'react'
-import { Link } from 'react-router'
+import React from "react";
 
-export default class extends React.Component {
-  render() {
+import ReduxStore from "./store";
+import Routes from "./routes";
+
+export default function(Router) {
+  return function({ url }) {
     return (
-      <p className="App-intro">
-        To get started, edit <code>src/App.js</code> and save to reload.
-        <br/>
-        <Link to="/custom">custom</Link>
-      </p>
-    )
-  }
+      <ReduxStore>
+        <Router location={url} context={{}}>
+          <div>
+            {Routes}
+          </div>
+        </Router>
+      </ReduxStore>
+    );
+  };
 }

@@ -1,68 +1,20 @@
+"use strict";
 
-require('import-export')
-require('babel-core/register')({ presets: ['es2015', 'react'] })
+var _react = require("react");
 
-const http = require('http')
-const path = require('path')
-const fs = require('fs')
-const express = require('express')
-const react = require('react')
-const reactDomServer = require('react-dom/server')
-const reactRouter = require('react-router')
+var _react2 = _interopRequireDefault(_react);
 
-const renderToString = reactDomServer.renderToString
-const match = reactRouter.match
-const RouterContext = reactRouter.RouterContext
+var _reactDom = require("react-dom");
 
-const staticFiles = [
-  '/static/*',
-  '/logo.svg',
-  '/asset-manifest.json',
-  '/favicon.ico'
-]
+var _reactDom2 = _interopRequireDefault(_reactDom);
 
-const routes = require('../src/routes').default()
+var _reactRouterDom = require("react-router-dom");
 
-const app = express()
-app.server = http.createServer(app)
-app.use(express.static('../build'))
+var _app = require("./app");
 
-staticFiles.forEach(file => {
-  app.get(file, (req, res) => {
-    const filePath = path.join( __dirname, '../build', req.url )
-    res.sendFile( filePath )
-  })
-})
+var _app2 = _interopRequireDefault(_app);
 
-app.get('*', (req, res) => {
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-  const error = () => res.status(404).send('404')
-  const htmlFilePath = path.join( __dirname, '../build', 'index.html' )
-
-  fs.readFile( htmlFilePath, 'utf8', (err, htmlData) => {
-    if(err) {
-      error()
-    }
-    else {
-      match({ routes, location: req.url }, (err, redirect, ssrData) => {
-        if(err) {
-          error()
-        }
-        else if(redirect) {
-          res.redirect(302, redirect.pathname + redirect.search)
-        }
-        else if(ssrData) {
-          const ReactApp = renderToString( react.createElement(RouterContext, ssrData) )
-          const RenderedApp = htmlData.replace('{{SSR}}', ReactApp)
-          res.status(200).send(RenderedApp)
-        }
-        else {
-          error()
-        }
-      })
-    }
-  })
-})
-
-app.server.listen( process.env.PORT || 8080 )
-console.log(`Listening on http://localhost:${app.server.address().port}`)
+var Application = (0, _app2.default)(_reactRouterDom.BrowserRouter);
+_reactDom2.default.render(_react2.default.createElement(Application, null), document.getElementById("root"));

@@ -1,22 +1,16 @@
-import React from 'react'
-import { Router, Route, browserHistory, IndexRedirect, IndexRoute } from 'react-router'
+import React from "react";
+import { Route } from "react-router-dom";
 
-import Container from './Container'
-import App from './App'
-import Custom from './Custom'
+import Home from "./components/home";
+import Other from "./components/other";
 
-const Routes = props => {
-  return (
-    <Router history={browserHistory}>
-      <Route path="/" component={Container}>
-        <IndexRoute component={App} />
-        <Route path="/custom" component={Custom} />
-      </Route>
-      <Route path="*">
-        <IndexRedirect to="/" />
-      </Route>
-    </Router>
-  )
+const routes = [
+  <Route exact path="/" component={Home} />,
+  <Route exact path="/other" component={Other} />
+];
+
+function iterateRoutes(singleRoute, key) {
+  return React.cloneElement(singleRoute, { key });
 }
 
-export default Routes
+export default routes.map(iterateRoutes);
